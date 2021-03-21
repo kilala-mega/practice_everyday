@@ -1,0 +1,20 @@
+from heapq import heapify, heappush, heappop
+class Solution(object):
+    def getSkyline(self, buildings):
+        """
+        :type buildings: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        points = sorted([(L, -H, R) for L, R, H in buildings] + [(R, 0, None) for _, R, _ in buildings])
+        res = [[0,0]]
+        h = [(0, sys.maxint)]
+        heapify(h)
+        for l, negH, r in points:
+            #print l, negH, r
+            while l >= h[0][1]:
+                heappop(h)
+            if negH:
+                heappush(h, (negH, r))
+            if res[-1][1] != -h[0][0]:
+                res.append([l,-h[0][0]])
+        return res[1:]
