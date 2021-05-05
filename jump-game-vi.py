@@ -1,0 +1,19 @@
+class Solution:
+    def maxResult(self, nums: List[int], k: int) -> int:
+        if not nums:
+            print('Error: the input nums is empty!')
+            raise
+        n = len(nums)
+        dp = [0] * n
+        d = deque([(nums[0],0)])
+        dp[0] = nums[0]
+        
+        for i in range(1, len(nums)):
+            dp[i] = nums[i] + d[0][0] # nums[i] + max(dp[i-x]) x in [1,k]
+            while d and d[-1][0] < dp[i]:
+                d.pop() # make sure d[0][0] is the largest dp
+            d.append((dp[i], i))
+            
+            if i - k >= d[0][1]:
+                d.popleft() # maintain window size <= k
+        return dp[-1]
